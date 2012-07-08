@@ -8,6 +8,9 @@
 (7) added "initialize" button so people won't have to remember to hit Enter.
 (8) added alert for crib letters missing from the designated row, and ability to color them.
 (9) added the ability to click on a row number to bring up the crib dialogue box.
+
+------------ after started using Git
+(10) remove alerts and confirms , replace by popups and lightbox
 --->
 <HTML>
 <!-- written by BION -->
@@ -60,7 +63,7 @@ function s_compare(a,b) {
 }		
 
 function letter_count() {
-	var i,n,str;
+	var i,n,str,s;
 	var l_count = new Array();
 	var s_count = new Array();
 
@@ -76,15 +79,28 @@ function letter_count() {
 	for (i=0;i<26;i++)
 		s_count[i] = [c_symbols.charAt(i),l_count[i] ]		
 	//s_count.sort(s_compare);
-	str = 'Letter counts\n'
+	//str = 'Letter counts\n'
+    str = 'Letter counts<br>'
 	for (i=0;i<26;i++)
 		if (s_count[i][1]>9)
-			str = str+s_count[i][0]+" "+s_count[i][1]+"\n";
+			//str = str+s_count[i][0]+" "+s_count[i][1]+"\n";
+            str = str+s_count[i][0]+" "+s_count[i][1]+"<br>";
 		else
-			str += s_count[i][0]+" 0"+s_count[i][1]+"\n";
-	alert(str)
+			//str += s_count[i][0]+" 0"+s_count[i][1]+"\n";
+            str += s_count[i][0]+" 0"+s_count[i][1]+"<br>";
+	//alert(str)
+    s = '<span id="letter_display">'
+    s += str;
+    s += '<center><input type = button onclick="hide_letter_display()" value="OK"></center>'
+    s += '</span>';
+    document.getElementById('cm_display').innerHTML=s;
+	document.getElementById('letter_display').style.visibility="visible";
 
 }	
+
+function hide_letter_display(){
+	document.getElementById('letter_display').style.visibility="hidden";
+}    
 
 function check_top_pixels() {
 	var i,j,elm,s,flag;
@@ -235,6 +251,9 @@ function restore_columns() {
     
 function start_over(){
     var i;
+    
+    show_box(2,"Start over?");
+    /*
     var do_undo;
 	do_undo = confirm("Start over?")
 	if ( do_undo == true) {
@@ -245,7 +264,19 @@ function start_over(){
         }
         restore_columns();
     }
+    */
 }
+
+function do_undo(){
+    var i;
+    close_box();
+    for (i=0;i<key_len;i++) {
+        col_pos[i]=i;
+        max_rep[i] = 1; // no columns joined 
+        rep_index[i]=1; // no columns joined 
+    }
+    restore_columns();
+}    
     
 function do_join() {
 	var n,j,i, col1,col2;
@@ -257,7 +288,8 @@ function do_join() {
 	for (j=0;j<key_len;j++)
 		if (document.ciphertext.colbox[j].checked ==true) {
 			if (max_rep[col_pos[j]]>1) {
-				alert("A checked column is already part of a join. Undo previous join first!");
+				//alert("A checked column is already part of a join. Undo previous join first!");
+                show_box(0,"A checked column is already part of a join. Undo previous join first!");
 				return;
 			}
 			numb_joined +=1;
@@ -267,7 +299,7 @@ function do_join() {
 			}
 	}
 	if ( numb_joined == 0){
-		alert("No columns checked!");
+		show_box(0,"No columns checked!");
 		return;
 	}
 
@@ -275,7 +307,7 @@ function do_join() {
 		inverse_pos[ col_pos[j] ] = j;		
 	for (j=0;j<numb_joined;j++)
 		if (document.ciphertext.colbox[inverse_pos[first_label+j]].checked !=true) {
-				alert("Can only join columns whose labels are consectutive letters!");
+				show_box(0,"Can only join columns whose labels are consectutive letters!");
 				return;
 	}
 	for (j=0;j<numb_joined;j++){
@@ -309,7 +341,7 @@ function undo_join() {
 		}
         restore_columns();
 		if ( cnt == 0)
-			alert("No columns checked!");
+			show_box(0,"No columns checked!");
 
 } // end undo join
 
@@ -378,7 +410,7 @@ function setup_code_columns() {
 	
 	data = document.ciphertext.cipher_place.value;
 	if (data.length<2){
-		alert("No ciphertext entered!");
+		show_box(0,"No ciphertext entered!");
 		return;
 	}
 	data = data.toLowerCase();
@@ -613,7 +645,7 @@ function hide_messagecr(){
 	}
     crib_row = parseInt(document.getElementById('crib_row').value);
     if (isNaN(crib_row)){
-        alert("No crib row entered!");
+        show_box(0,"No crib row entered!");
         crib_row = -1;
     }
     else
@@ -691,7 +723,7 @@ function hide_messagecr(){
     }
     if ( s != ''){
         s = "Crib letters missing from row: "+s;
-        alert(s);
+        show_box(0,s);
      }
     document.getElementById('c_display').style.visibility="hidden";
     restore_columns();     
@@ -766,14 +798,23 @@ function checkEnter(e){ //e is event object passed from function invocation by e
 
 
 function do_clear() {
-    var do_erase;
+    //var do_erase;
+    
+    show_box(1,"Erase the current cipher?")
+    /*
 	do_erase = confirm("Erase the current cipher?")
 	if ( do_erase == true) {
 		input_ok();
 		document.ciphertext.cipher_place.value='';
-	}	
+	}
+    */
 }	
 
+function do_erase(){
+    close_box();
+	input_ok();
+	document.ciphertext.cipher_place.value='';
+}
 
 
 function redirect() {
@@ -837,11 +878,11 @@ function setup_swap() {
 	document.debug.output_area.value= s;
 	*/
 	if (cnt<2){
-		alert("Less than 2 columns checked!");
+		show_box(0,"Less than 2 columns checked!");
 		return
 	}
 	if ( cnt>2){
-		alert("More than 2 columns checked!");
+		show_box(0,"More than 2 columns checked!");
 		return
 	}
     sr1 = old_top_pixel[col1];
@@ -916,11 +957,11 @@ function shift_left() {
 	document.debug.output_area.value= s;
 	*/
 	if (cnt<1){
-		alert("No column checked!");
+		show_box(0,"No column checked!");
 		return
 	}
 	if ( cnt>1){
-		alert("More than 1 columns checked!");
+		show_box(0,"More than 1 columns checked!");
 		return
 	}
     col2 = col1-1;
@@ -1013,11 +1054,11 @@ function shift_right() {
 	document.debug.output_area.value= s;
 	*/
 	if (cnt<1){
-		alert("No column checked!");
+		show_box(0,"No column checked!");
 		return
 	}
 	if ( cnt>1){
-		alert("More than 1 columns checked!");
+		show_box(0,"More than 1 columns checked!");
 		return
 	}
     col2 = col1+1;
@@ -1081,7 +1122,7 @@ function save_to_disk(){
 	var i,j, str;
 	
 	if (typeof(localStorage) == 'undefined' ) {
-		alert('Your browser does not support HTML5 localStorage. Try Chrome.');
+		show_box(0,'Your browser does not support HTML5 localStorage. Try Chrome.');
 	} 
 	else {
 		try {
@@ -1089,7 +1130,7 @@ function save_to_disk(){
 			localStorage.setItem("myszkowski.period", key_len);
 		} catch (e) {
 			if (e == QUOTA_EXCEEDED_ERR) {
-			alert('Quota exceeded!'); //data wasn’t successfully saved due to quota exceed so throw an error
+			show_box(0,'Quota exceeded!'); //data wasn’t successfully saved due to quota exceed so throw an error
 			}
 		}
 	}
@@ -1115,7 +1156,7 @@ function save_to_disk(){
 	}
 	localStorage.setItem("myszkowski.topPixel", str);
 
-	alert("Work saved on disk");
+	show_box(0,"Work saved on disk");
 
 }
 
@@ -1125,7 +1166,7 @@ function get_from_disk(){
 
 	temp = localStorage.getItem("myszkowski.cipher");
 	if (temp == undefined){
-		alert("No cipher stored");
+		show_box(0,"No cipher stored");
 		return
 	}
     code = temp;
@@ -1165,8 +1206,36 @@ function clear_disk(){
 	localStorage.removeItem("myszkowski.maxRep");    
 	localStorage.removeItem("myszkowski.repIndex");    
 	localStorage.removeItem("myszkowski.topPixel");        
-	alert("work cleared from disk");
+	show_box(0,"work cleared from disk");
 }
+
+function show_box(n,message){ // n=0 1 choice, 2 for 2 choices
+    var str;
+    document.getElementById('light').style.display='block';
+    document.getElementById('fade').style.display='block';
+    str ='';
+    str += message;
+    str += '<br>';
+    if ( n==0)
+        str += '<br><input type = button onclick="close_box()" value="OK">'
+    else if ( n==1) { // erase cipher
+        str += '<br><input type = button onclick="do_erase()" value="OK">'
+        str += '&nbsp;&nbsp;&nbsp;&nbsp;<input type = button onclick="close_box()" value="Cancel">'
+    }
+    else if ( n==2) { // start over
+        str += '<br><input type = button onclick="do_undo()" value="OK">'
+        str += '&nbsp;&nbsp;&nbsp;&nbsp;<input type = button onclick="close_box()" value="Cancel">'
+    }
+    document.getElementById('light').innerHTML = str;
+}
+function close_box(){
+    var s;
+    document.getElementById('light').style.display='none';
+    document.getElementById('fade').style.display='none';
+    //s = "result was "+n;
+    //document.getElementById('result').innerHTML=s;
+}
+
 
 </script>
 <style>
@@ -1195,6 +1264,20 @@ function clear_disk(){
 	padding:10px;
 	display:hidden;	
 }
+
+#letter_display {
+	position:absolute; /* use absolute position so message is superimposed on cipher display */
+	left:200px;
+	top:10px;
+	width:200px;
+	height:580px;
+	background: #EEEEEE;
+	color: #000;
+	border:3px ridge black;
+	padding:10px;
+	display:hidden;	
+}
+
 
 .colx {
     max-width:20x;
@@ -1225,6 +1308,33 @@ function clear_disk(){
 	background: #EEEEDD;    
 
  }
+.black_overlay{
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index:1001;
+	-moz-opacity: 0.7;
+	opacity:.70;  /* the higher the more opaque */
+	filter: alpha(opacity=70);
+}
+.white_content {
+	display: none;
+	position: absolute;
+	top: 25%;
+	left: 25%;
+	width: 50%;
+	height: 25%;
+	padding: 16px;
+    background: #EEEEEE;
+    color: #000;
+    border:10px ridge black;
+	z-index:1002;
+	overflow: auto;
+}
 
 </style>
 
@@ -1255,6 +1365,9 @@ Ciphertext: (Type or paste cipher into this box, enter the key length, click Ini
 </form>
 <div id = "cm_display" >
 </div>	
+<div id="light" class="white_content">
+</div>
+<div id="fade" class="black_overlay"></div>
 
 <!-- mark off space for swap -->
 
