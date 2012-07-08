@@ -1,0 +1,15 @@
+{
+  "name": "Myszkowski Interactive",
+  "description": "Interactive Myszkowski solver, expermental",
+  "version": "2.0.0",
+  "app": {
+    "launch": {
+      "local_path": "mysz4.html"
+    }
+  },
+  "icons": {
+    "16": "Bicon16_alt2.png",
+    "128": "mysz_interactive128.png"
+  }
+  
+}
