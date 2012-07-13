@@ -7,6 +7,7 @@
       "local_path": "mysz4.html"
     }
   },
+  "offline_enabled": true,      
   "icons": {
     "16": "Bicon16_alt2.png",
     "128": "mysz_interactive128.png"
