@@ -1184,6 +1184,12 @@ function do_erase(){
     close_box();
 	input_ok();
 	document.ciphertext.cipher_place.value='';
+    red_let = '';
+    green_let = '';
+    blue_let = '';
+    cyan_let='';
+    cribtext='';
+    crib_row = -1;
 }
 
 
