@@ -1,4 +1,3 @@
-
 var code
 var symbols="abcdefghijklmnopqrstuvwxyz-"
 var vowels="aeiou";
@@ -467,10 +466,12 @@ function setup_code_columns() {
 	*/
 	// Use HTML table so checkboxes will align with code columns
 	s = '';
+    /*
 	s += 'To swap columns, check the boxes below them, & click swap button.'
 	s += 'To combine columns, check their boxes, & click join button. '
 	s += ' Use sliders to align vertically. When layout looks correct, click decrypt button.';
-	
+	*/
+    s += '<b>Transposition Block:</b>';
 	s += '<table><tr>'
     n = numb_rows; 
 	for (j=0;j<key_len;j++){
@@ -860,7 +861,7 @@ function rotate_left(){
     check_top_pixels();    
     
 }
-
+/*
 function shift_left() {
 	var n,j,i, col1,col2;
 	var temp = [];
@@ -875,10 +876,6 @@ function shift_left() {
 			cnt +=1;
 			if (col1 == -1) col1 = j;
 	}
-	/*
-	s = 'there are '+cnt+' boxes checked, leftmost is '+col1+' and right most is '+col2;		
-	document.debug.output_area.value= s;
-	*/
 	if (cnt<1){
 		show_box(0,"No column checked!");
 		return
@@ -917,7 +914,7 @@ function shift_left() {
     }
     check_top_pixels();
 }
-
+*/
 function insert_right(right_pos,left_pos) { // partial rotate left from right_pos to left pos
 	var n,j,i, col1,col2;
     var ta,line_height;
@@ -1010,7 +1007,7 @@ function rotate_right(){
 
 }
 
-
+/*
 function shift_right() {
 	var n,j,i, col1,col2;
 	var temp = [];
@@ -1026,10 +1023,6 @@ function shift_right() {
 			cnt +=1;
 			if (col1 == -1) col1 = j;
 	}
-	/*
-	s = 'there are '+cnt+' boxes checked, leftmost is '+col1+' and right most is '+col2;		
-	document.debug.output_area.value= s;
-	*/
 	if (cnt<1){
 		show_box(0,"No column checked!");
 		return
@@ -1076,21 +1069,44 @@ function clear_columns() {
 		document.ciphertext.colbox[j].checked = false;
 
 }
+*/
+function show_directions() {
+    var s,str;
+    str = '';
+	str += 'To swap columns, check the boxes below them, & click swap button.<br>'
+	str += 'To combine columns, check their boxes, & click join button.<br> '
+    str += "To move a column, drag it's checkbox to the column label where you want it to go. <br>";
+	str += ' Use sliders to align vertically.<br> When layout looks correct, click decrypt button.';
+   s = '<span id="direction_display">'
+    s += str;
+    s += '<br><br><center><input type = button id="hide_direction_display3" value="OK"></center>'
+    s += '</span>';
+    document.getElementById('cm_display').innerHTML=s;
+	document.getElementById('direction_display').style.visibility="visible";
+    document.getElementById('hide_direction_display3').addEventListener("click", function(){
+        document.getElementById('direction_display').style.visibility="hidden";
+    });
+
+}
 
 
 function initialize_buttons(){
     var s;
 	s = '<br>key length: <input type = text name=key_len_entry value =' +key_len+' size = 3 id="checkEnter1" >'
 	s += ' &nbsp <INPUT id="setup_swap1" type=button value="swap checked columns" >';
+    /*
     s += '&nbsp <INPUT id="shift_left1" type=button value="slide checked column left" >';
     s += '&nbsp <INPUT id="shift_right1" type=button value="slide checked column right" >';
     s += '&nbsp <INPUT id="clear_columns1"; type=button value="uncheck" >';
+    */
     s += '&nbsp <INPUT id="rotate_left1" type=button value="rotate left" >';
     s += '&nbsp <INPUT id="rotate_right1" type=button value="rotate right" >';
-	s += '<br><br>&nbsp <INPUT id="do_join1" type=button value="join checked columns" >';
+	//s += '<br><br>&nbsp <INPUT id="do_join1" type=button value="join checked columns" >';
+    s += '&nbsp <INPUT id="do_join1" type=button value="join checked columns" >';
 	s += '&nbsp <INPUT id="undo_join1" type=button value="undo join" >';
-	s += '&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp';
-
+	//s += '&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp';
+    s += '<br><br> &nbsp <INPUT id="directions1" type=button value="Directions" >';
+    s += '&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp';
     s += '&nbsp  <INPUT id="start_over1" type=button value="Start over" >';
 	s += '&nbsp  <INPUT id="do_clear1" type=button value="Erase" >';
        
@@ -1108,13 +1124,14 @@ function initialize_buttons(){
     */
     document.getElementById('checkEnter1').addEventListener("keypress", checkEnter);    
     document.getElementById('setup_swap1').addEventListener("click", setup_swap);    
-    document.getElementById('shift_left1').addEventListener("click", shift_left);    
-    document.getElementById('shift_right1').addEventListener("click", shift_right);    
-    document.getElementById('clear_columns1').addEventListener("click", clear_columns);  
+    //document.getElementById('shift_left1').addEventListener("click", shift_left);    
+    //document.getElementById('shift_right1').addEventListener("click", shift_right);    
+    //document.getElementById('clear_columns1').addEventListener("click", clear_columns);  
     document.getElementById('rotate_left1').addEventListener("click", rotate_left);        
     document.getElementById('rotate_right1').addEventListener("click", rotate_right);    
     document.getElementById('do_join1').addEventListener("click", do_join);    
-    document.getElementById('undo_join1').addEventListener("click", undo_join);        
+    document.getElementById('undo_join1').addEventListener("click", undo_join);  
+    document.getElementById('directions1').addEventListener("click", show_directions);                
     document.getElementById('start_over1').addEventListener("click", start_over);            
     document.getElementById('do_clear1').addEventListener("click", do_clear);                
     document.getElementById('save_to_disk2').addEventListener("click", save_to_disk);                    
