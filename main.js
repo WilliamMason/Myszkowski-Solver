@@ -226,19 +226,7 @@ function start_over(){
     var i;
     
     show_box(2,"Start over?");
-    /*
-    var do_undo;
-	do_undo = confirm("Start over?")
-	if ( do_undo == true) {
-        for (i=0;i<key_len;i++) {
-            col_pos[i]=i;
-            max_rep[i] = 1; // no columns joined 
-            rep_index[i]=1; // no columns joined 
-        }
-        restore_columns();
-    }
-    */
-}
+ }
 
 function do_undo(){
     var i;
@@ -521,7 +509,7 @@ function setup_code_columns() {
 	s +='</tr><tr>';
 	for (j=0;j<key_len;j++) {
 		s += '<td>'
-		s += '<input type="checkbox"  align="MIDDLE" name="colbox" value='+j+' > &nbsp ';
+		s += '<input type="checkbox"  align="MIDDLE" name="colbox" value='+j+' id = "colbox'+j+'" draggable="true" > &nbsp ';
 		s += '</td>';
 		columns_selected[j] = 0;
 	}
@@ -563,8 +551,36 @@ function setup_code_columns() {
 		old_top_pixel[j] = document.getElementById(elm).scrollTop;
 	}
     // add event listeners
-    for (j=0;j<key_len;j++)
-        document.getElementById('col'+j).addEventListener("mousemove", check_top_pixels);            
+    for (j=0;j<key_len;j++) {
+        document.getElementById('col'+j).addEventListener("mousemove", check_top_pixels);  
+        document.getElementById('colbox'+j).addEventListener('dragstart',function (event) {
+            // store the ID of the element, and collect it on the drop later on
+            event.dataTransfer.setData('Text', this.id);
+            // for debugging
+            //document.getElementById('log').textContent += this.id + '\n';    
+        });
+        document.getElementById('label'+j).addEventListener('drop',  function (event) {
+            var pos1,pos2;        
+            // stops the browser from redirecting off to the text.
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
+
+             var s =event.dataTransfer.getData('Text');
+             pos1 = parseInt(s.slice(6)); // number after 'colbox'
+             pos2 = parseInt(this.id.slice(5)) // number after 'label'
+             if ( pos2 < pos1)
+                insert_left(pos1,pos2);
+             else if (pos1<pos2)
+                insert_right(pos2,pos1);
+             else // columns the same!
+                restore_columns();
+             // for debugginh
+            // document.getElementById('log').textContent += 'dropped '+s + ' at '+this.id+'\n';    
+  
+             return false;
+        });        
+    }
 }	
 
 function selectmouse(e) {
@@ -901,6 +917,60 @@ function shift_left() {
     }
     check_top_pixels();
 }
+
+function insert_right(right_pos,left_pos) { // partial rotate left from right_pos to left pos
+	var n,j,i, col1,col2;
+    var ta,line_height;
+	var temp = [];
+    
+    check_top_pixels(); // make sure old_top_pixel array is up to date  
+    for (j=0;j<key_len;j++) temp[j] = old_top_pixel[j];
+
+    //move leftmost column to rightmost column and shift all other columns left.
+    n = col_pos[left_pos];
+    for (j=left_pos;j<right_pos;j++)
+        col_pos[j] = col_pos[j+1];
+    col_pos[right_pos] = n;
+    n = temp[left_pos];
+    for (j=left_pos;j<right_pos;j++)
+        temp[j] = temp[j+1];
+    temp[right_pos] = n;
+    restore_columns();
+    // update vertical alignment
+    for (j=0;j<key_len;j++){
+        n = 'col'+j;
+        document.getElementById(n).scrollTop = temp[j];
+    }
+    check_top_pixels();
+}
+
+
+function insert_left(right_pos,left_pos) { // partial rotate right from left_pos to right pos
+	var n,j,i, col1,col2;
+    var ta,line_height;
+	var temp = [];
+    
+    check_top_pixels(); // make sure old_top_pixel array is up to date  
+    for (j=0;j<key_len;j++) temp[j] = old_top_pixel[j];
+
+    //move rightmost column to leftmost column and shift all other columns right.
+    n = col_pos[right_pos];
+    for (j=right_pos;j>left_pos;j--)
+        col_pos[j] = col_pos[j-1];
+    col_pos[left_pos] = n;
+    n = temp[right_pos];
+    for (j=right_pos;j>left_pos;j--)
+        temp[j] = temp[j-1];
+    temp[left_pos] = n;
+    restore_columns();
+    // update vertical alignment
+    for (j=0;j<key_len;j++){
+        n = 'col'+j;
+        document.getElementById(n).scrollTop = temp[j];
+    }
+    check_top_pixels();
+}
+
 
 function rotate_right(){
 	var n,j,i, col1,col2;
