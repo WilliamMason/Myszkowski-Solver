@@ -13,7 +13,7 @@
 (10) remove alerts and confirms , replace by popups and lightbox
 (11) Gradually remove inline javascript and put into main.js
 (12) added drag and drop to insert columns
-(13) renamed to version 5.0 because drag and drop only works with Chrome and Firebox, seems to be a bug in Safari 5.1...
+(13) renamed to version 5.0 because drag and drop only works with Chrome and Firebox; there seems to be a bug in Safari 5.1...
 --->
 <HTML>
 <!-- written by BION -->
@@ -109,15 +109,12 @@ textarea {
 	background: #EEEEDD;    
 
  }
- .colz {
+ .colz {  /* column labels */
     max-width:20x;
-    /*height:330px;*/
-    padding:0px;
+    padding:2px;
 
     overflow-x: hidden;
     overflow-y: hidden;
-
-    /*margin-top:1px;*/
     margin:0px;
     border:1px ridge black;
     line-height:1;

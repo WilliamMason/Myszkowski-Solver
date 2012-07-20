@@ -214,7 +214,6 @@ function restore_columns() {
 		s = get_label(n);
         if ( n < numb_long_cols)
             document.getElementById('label'+n).style.backgroundColor = "yellow";
-		//document.getElementById('label'+n).value=s;
         document.getElementById('label'+n).innerHTML=s;
         
     }
@@ -483,7 +482,6 @@ function setup_code_columns() {
 	s +='</tr><tr>';
 	for (j=0;j<key_len;j++) {
 		s += '<td>'
-		//s += '<input type="text" size=2 id = "label'+j+'" >';
         s += '<div id = "label'+j+'" class="colz" draggable="true" >&nbsp;&nbsp;</div>';
 		s += '</td>';
 	}
@@ -530,7 +528,6 @@ function setup_code_columns() {
 	// put in labels
 	for (i=0;i<key_len;i++){
 		s = get_label(i);
-		//document.getElementById('label'+i).value=s;
         document.getElementById('label'+i).innerHTML=s;
 		
 	}
@@ -566,7 +563,6 @@ function setup_code_columns() {
             }
 
              var s =event.dataTransfer.getData('Text');
-             //pos1 = parseInt(s.slice(6)); // number after 'colbox'
              pos1 = parseInt(s.slice(5)); // number after 'label'
              pos2 = parseInt(this.id.slice(5)) // number after 'label'
              if ( pos2 < pos1)
@@ -956,9 +952,10 @@ function rotate_right(){
 function show_directions() {
     var s,str;
     str = '';
+    str += '<b>Directions</b><br>';
 	str += 'To swap columns, check the boxes below them, & click swap button.<br>'
 	str += 'To combine columns, check their boxes, & click join button.<br> '
-    str += "To move a column, drag it's checkbox to the column label where you want it to go. <br>";
+    str += "To move a column, drag it's column label to the label where you want it to go. <br>";
 	str += ' Use sliders to align vertically.<br> When layout looks correct, click decrypt button.';
    s = '<span id="direction_display">'
     s += str;
