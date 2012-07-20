@@ -13,18 +13,19 @@
 (10) remove alerts and confirms , replace by popups and lightbox
 (11) Gradually remove inline javascript and put into main.js
 (12) added drag and drop to insert columns
+(13) renamed to version 5.0 because drag and drop only works with Chrome and Firebox, seems to be a bug in Safari 5.1...
 --->
 <HTML>
 <!-- written by BION -->
 <HEAD>
-<TITLE>Myszkowski Transposition Worksheet 4.0</TITLE>
+<TITLE>Myszkowski Transposition Worksheet 5.0</TITLE>
 <style type="text/css">
 textarea {
  font-family:monospace;	
  font-size: 15px;
 }
 </style>
-<script src="main.js"></script>
+<script src="mysz_main.js"></script>
 <style>
 /* message display box */
 #m_display {
@@ -108,6 +109,23 @@ textarea {
 	background: #EEEEDD;    
 
  }
+ .colz {
+    max-width:20x;
+    /*height:330px;*/
+    padding:0px;
+
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    /*margin-top:1px;*/
+    margin:0px;
+    border:1px ridge black;
+    line-height:1;
+	background: #EEEEEE;    
+    font-family:monospace;
+    font-size:15px;
+
+ }
 .black_overlay{
 	display: none;
 	position: absolute;
@@ -140,7 +158,7 @@ textarea {
 
 </HEAD>
 <BODY bgcolor="Silver">
-<center><span style="font-weight:bold;">Myszkowski Transposition Worksheet 4.0</span></center><br>
+<center><span style="font-weight:bold;">Myszkowski Transposition Worksheet 5.0</span></center><br>
 <Form name=ciphertext>
 <!-- mark space for cipher and plaintext -->
 <div id="outputblock" 

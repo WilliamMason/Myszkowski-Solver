@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "app": {
     "launch": {
-      "local_path": "mysz4.html"
+      "local_path": "mysz5.html"
     }
   },
   "offline_enabled": true,      

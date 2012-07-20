@@ -214,7 +214,8 @@ function restore_columns() {
 		s = get_label(n);
         if ( n < numb_long_cols)
             document.getElementById('label'+n).style.backgroundColor = "yellow";
-		document.getElementById('label'+n).value=s;
+		//document.getElementById('label'+n).value=s;
+        document.getElementById('label'+n).innerHTML=s;
         
     }
 	for (j=0;j<key_len;j++)
@@ -482,7 +483,8 @@ function setup_code_columns() {
 	s +='</tr><tr>';
 	for (j=0;j<key_len;j++) {
 		s += '<td>'
-		s += '<input type="text" size=2 id = "label'+j+'" >';
+		//s += '<input type="text" size=2 id = "label'+j+'" >';
+        s += '<div id = "label'+j+'" class="colz" draggable="true" >&nbsp;&nbsp;</div>';
 		s += '</td>';
 	}
 	// vowel label
@@ -497,7 +499,7 @@ function setup_code_columns() {
 	s +='</tr><tr>';
 	for (j=0;j<key_len;j++) {
 		s += '<td>'
-		s += '<input type="checkbox"  align="MIDDLE" name="colbox" value='+j+' id = "colbox'+j+'" draggable="true" > &nbsp ';
+		s += '<input type="checkbox"  align="MIDDLE" name="colbox" value='+j+' id = "colbox'+j+'" > &nbsp ';
 		s += '</td>';
 		columns_selected[j] = 0;
 	}
@@ -528,7 +530,8 @@ function setup_code_columns() {
 	// put in labels
 	for (i=0;i<key_len;i++){
 		s = get_label(i);
-		document.getElementById('label'+i).value=s;
+		//document.getElementById('label'+i).value=s;
+        document.getElementById('label'+i).innerHTML=s;
 		
 	}
 	show_swap();
@@ -541,12 +544,20 @@ function setup_code_columns() {
     // add event listeners
     for (j=0;j<key_len;j++) {
         document.getElementById('col'+j).addEventListener("mousemove", check_top_pixels);  
-        document.getElementById('colbox'+j).addEventListener('dragstart',function (event) {
+        document.getElementById('label'+j).addEventListener('dragstart',function (event) {
             // store the ID of the element, and collect it on the drop later on
             event.dataTransfer.setData('Text', this.id);
             // for debugging
             //document.getElementById('log').textContent += this.id + '\n';    
         });
+        document.getElementById('label'+j).addEventListener('dragover',  function (event) {
+            var pos1,pos2;        
+            // stops the browser from redirecting off to the text.
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
+        });
+        
         document.getElementById('label'+j).addEventListener('drop',  function (event) {
             var pos1,pos2;        
             // stops the browser from redirecting off to the text.
@@ -555,7 +566,8 @@ function setup_code_columns() {
             }
 
              var s =event.dataTransfer.getData('Text');
-             pos1 = parseInt(s.slice(6)); // number after 'colbox'
+             //pos1 = parseInt(s.slice(6)); // number after 'colbox'
+             pos1 = parseInt(s.slice(5)); // number after 'label'
              pos2 = parseInt(this.id.slice(5)) // number after 'label'
              if ( pos2 < pos1)
                 insert_left(pos1,pos2);
