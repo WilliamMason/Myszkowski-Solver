@@ -248,7 +248,6 @@ function do_join() {
 	for (j=0;j<key_len;j++)
 		if (document.ciphertext.colbox[j].checked ==true) {
 			if (max_rep[col_pos[j]]>1) {
-				//alert("A checked column is already part of a join. Undo previous join first!");
                 show_box(0,"A checked column is already part of a join. Undo previous join first!");
 				return;
 			}
@@ -457,20 +456,8 @@ function setup_code_columns() {
 		}
 		max_diff[j] = max_start[j]-min_start[j];
 	}
-	// next 4 lines for debugging
-	/*
-	s = "there are "+numb_long_cols+" long columns and "+numb_short_cols+" short columns and "+numb_rows+" complete rows\n";
-	for (j=0;j<key_len;j++)
-		s +=min_start[j]+" "+max_start[j]+" "+max_diff[j]+"\n";
-	document.debug.output_area.value= s; 
-	*/
 	// Use HTML table so checkboxes will align with code columns
 	s = '';
-    /*
-	s += 'To swap columns, check the boxes below them, & click swap button.'
-	s += 'To combine columns, check their boxes, & click join button. '
-	s += ' Use sliders to align vertically. When layout looks correct, click decrypt button.';
-	*/
     s += '<b>Transposition Block:</b>';
 	s += '<table><tr>'
     n = numb_rows; 
@@ -576,7 +563,7 @@ function setup_code_columns() {
                 insert_right(pos2,pos1);
              else // columns the same!
                 restore_columns();
-             // for debugginh
+             // for debugging
             // document.getElementById('log').textContent += 'dropped '+s + ' at '+this.id+'\n';    
   
              return false;
@@ -861,60 +848,7 @@ function rotate_left(){
     check_top_pixels();    
     
 }
-/*
-function shift_left() {
-	var n,j,i, col1,col2;
-	var temp = [];
-    
-    check_top_pixels(); // make sure old_top_pixel array is up to date  
-    for (j=0;j<key_len;j++) temp[j] = old_top_pixel[j];
-	cnt = 0
-	col1 = -1;
-	col2 = -1;
-	for (j=0;j<key_len;j++)
-		if (document.ciphertext.colbox[j].checked ==true) {
-			cnt +=1;
-			if (col1 == -1) col1 = j;
-	}
-	if (cnt<1){
-		show_box(0,"No column checked!");
-		return
-	}
-	if ( cnt>1){
-		show_box(0,"More than 1 columns checked!");
-		return
-	}
-    col2 = col1-1;
-    if ( col2<0) {
-        col2 = key_len-1;
-        //special case: move leftmost column to rightmost column and shift all other columns left.
-        n = col_pos[col1];
-        for (j=0;j<key_len-1;j++)
-            col_pos[j] = col_pos[j+1];
-        col_pos[key_len-1] = n;
-        n = temp[col1];
-        for (j=0;j<key_len-1;j++)
-            temp[j] = temp[j+1];
-        temp[key_len-1] = n;
-    }
-    else {
-        n = col_pos[col1];
-        col_pos[col1] = col_pos[col2];
-        col_pos[col2] = n;
-        n = temp[col1];
-        temp[col1] = temp[col2];
-        temp[col2] = n;
-    }
-    restore_columns();
-    document.ciphertext.colbox[col2].checked = true;  
-    // update vertical alignment
-    for (j=0;j<key_len;j++){
-        n = 'col'+j;
-        document.getElementById(n).scrollTop = temp[j];
-    }
-    check_top_pixels();
-}
-*/
+
 function insert_right(right_pos,left_pos) { // partial rotate left from right_pos to left pos
 	var n,j,i, col1,col2;
     var ta,line_height;
@@ -1007,69 +941,6 @@ function rotate_right(){
 
 }
 
-/*
-function shift_right() {
-	var n,j,i, col1,col2;
-	var temp = [];
-    
-    check_top_pixels(); // make sure old_top_pixel array is up to date  
-    for (j=0;j<key_len;j++) temp[j] = old_top_pixel[j];
-	
-	cnt = 0
-	col1 = -1;
-	col2 = -1;
-	for (j=0;j<key_len;j++)
-		if (document.ciphertext.colbox[j].checked ==true) {
-			cnt +=1;
-			if (col1 == -1) col1 = j;
-	}
-	if (cnt<1){
-		show_box(0,"No column checked!");
-		return
-	}
-	if ( cnt>1){
-		show_box(0,"More than 1 columns checked!");
-		return
-	}
-    col2 = col1+1;
-    if ( col2>=key_len) {
-        col2 = 0;
-        //special case: move rightmost column to leftmost column and shift all other columns right.
-        n = col_pos[col1];
-        for (j=key_len-1;j>0;j--)
-            col_pos[j] = col_pos[j-1];
-        col_pos[0] = n;
-        n = temp[col1];
-        for (j=key_len-1;j>0;j--)
-            temp[j] = temp[j-1];
-        temp[0] = n;
-    }
-    else {
-        n = col_pos[col1];
-        col_pos[col1] = col_pos[col2];
-        col_pos[col2] = n;
-        n = temp[col1];
-        temp[col1] = temp[col2];
-        temp[col2] = n;
-    }
-    restore_columns();
-    document.ciphertext.colbox[col2].checked = true; 
-    // update vertical alignment
-    for (j=0;j<key_len;j++){
-        n = 'col'+j;
-        document.getElementById(n).scrollTop = temp[j];
-    }
-    check_top_pixels();
-}
-
-function clear_columns() {
-
-    var j;
-	for (j=0;j<key_len;j++)
-		document.ciphertext.colbox[j].checked = false;
-
-}
-*/
 function show_directions() {
     var s,str;
     str = '';
@@ -1094,19 +965,13 @@ function initialize_buttons(){
     var s;
 	s = '<br>key length: <input type = text name=key_len_entry value =' +key_len+' size = 3 id="checkEnter1" >'
 	s += ' &nbsp <INPUT id="setup_swap1" type=button value="swap checked columns" >';
-    /*
-    s += '&nbsp <INPUT id="shift_left1" type=button value="slide checked column left" >';
-    s += '&nbsp <INPUT id="shift_right1" type=button value="slide checked column right" >';
-    s += '&nbsp <INPUT id="clear_columns1"; type=button value="uncheck" >';
-    */
     s += '&nbsp <INPUT id="rotate_left1" type=button value="rotate left" >';
     s += '&nbsp <INPUT id="rotate_right1" type=button value="rotate right" >';
-	//s += '<br><br>&nbsp <INPUT id="do_join1" type=button value="join checked columns" >';
     s += '&nbsp <INPUT id="do_join1" type=button value="join checked columns" >';
 	s += '&nbsp <INPUT id="undo_join1" type=button value="undo join" >';
-	//s += '&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp';
     s += '<br><br> &nbsp <INPUT id="directions1" type=button value="Directions" >';
     s += '&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp';
+    s += '&nbsp &nbsp &nbsp &nbsp ';
     s += '&nbsp  <INPUT id="start_over1" type=button value="Start over" >';
 	s += '&nbsp  <INPUT id="do_clear1" type=button value="Erase" >';
        
@@ -1116,17 +981,8 @@ function initialize_buttons(){
  
 
 	document.getElementById('key_lenblock').innerHTML=s;
-    /*
-    if (document.getElementById('checkEnter1') == null)
-        alert("No check enter1");
-    else
-        document.getElementById('checkEnter1').addEventListener("keypress", checkEnter);   
-    */
     document.getElementById('checkEnter1').addEventListener("keypress", checkEnter);    
     document.getElementById('setup_swap1').addEventListener("click", setup_swap);    
-    //document.getElementById('shift_left1').addEventListener("click", shift_left);    
-    //document.getElementById('shift_right1').addEventListener("click", shift_right);    
-    //document.getElementById('clear_columns1').addEventListener("click", clear_columns);  
     document.getElementById('rotate_left1').addEventListener("click", rotate_left);        
     document.getElementById('rotate_right1').addEventListener("click", rotate_right);    
     document.getElementById('do_join1').addEventListener("click", do_join);    
@@ -1338,14 +1194,6 @@ function close_box(){
     //document.getElementById('result').innerHTML=s;
 }
 
-
-//document.getElementById('get_from_disk1').onclick=get_from_disk();
-/*
-document.addEventListener('DOMContentLoaded', function () {
-  //document.querySelector('button').addEventListener('click', clickHandler);
-  document.getElementById('get_from_disk1').addEventListener('click', get_from_disk);
-});
-*/
 
 onload = function() {
     document.getElementById('checkEnter2').addEventListener("keypress", checkEnter);    
