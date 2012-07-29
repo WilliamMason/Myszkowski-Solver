@@ -510,7 +510,7 @@ function setup_code_columns() {
 	}
 	for (i=0;i<key_len;i++){
 		s = get_column_string(i);
-		document.getElementById('col'+i).value=s;	
+        document.getElementById('col'+i).innerHTML=s;	        
 	}
     // row numbers
     s=''
@@ -1089,9 +1089,11 @@ function get_from_disk(){
 	}
     code = temp;
 	key_len = parseInt(localStorage.getItem("myszkowski.period"));
-    document.ciphertext.cipher_place.value = code;
-    initialize_buttons();
-	setup_code_columns();
+    if ( document.getElementById('cipher_place') ){    
+        document.ciphertext.cipher_place.value = code;
+        initialize_buttons();
+        setup_code_columns();
+    }
     s = localStorage.getItem("myszkowski.colOrder")
     s = s.split(':');
     for (i=0;i<key_len;i++)
