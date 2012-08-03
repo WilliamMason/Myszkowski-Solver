@@ -2,6 +2,7 @@
   "name": "Myszkowski Interactive",
   "description": "Interactive Myszkowski solver, expermental",
   "version": "2.0.0",
+  "manifest_version": 2,    
   "app": {
     "launch": {
       "local_path": "mysz5.html"
